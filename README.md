@@ -1,4 +1,4 @@
-# Software FJ – Sistema de gestión de clientes, servicios y reservas
+Software FJ
 
 Proyecto de la Fase 4 del curso Programación (213023), UNAD. Sistema orientado a objetos en Python
 
