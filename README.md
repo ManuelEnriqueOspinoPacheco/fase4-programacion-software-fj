@@ -10,13 +10,6 @@ Gestiona clientes, servicios (salas, equipos y asesorías) y reservas de la empr
 
 - Python 3.10
 
-## Cómo ejecutarlo puedo ejecutarlo 
-
-```bash
-python main_miguel.py
-```
-
-Corre 20 operaciones (válidas e inválidas), muestra el resultado en pantalla y deja el registro completo en `logs/software_fj.log`.
 
 ## Dónde está cada técnica de manejo de errores
 
