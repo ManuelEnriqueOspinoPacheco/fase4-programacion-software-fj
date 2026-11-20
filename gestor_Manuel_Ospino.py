@@ -1,7 +1,3 @@
-"""
-gestor_manuel.py - GestorSoftwareFJ: administra listas internas (sin base de datos).
-Integrante responsable: Manuel Enrique Ospino Pacheco
-"""
 from cliente_miguel import Cliente
 from excepciones_eva import (ClienteInvalidoError, ParametroFaltanteError,
                          ParametroInvalidoError, ReservaInvalidaError,
