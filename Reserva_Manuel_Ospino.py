@@ -1,7 +1,3 @@
-"""
-reserva_manuel.py - Clase Reserva y sus estados.
-Integrante responsable: Manuel Enrique Ospino Pacheco
-"""
 from enum import Enum
 
 from cliente_miguel import Cliente
