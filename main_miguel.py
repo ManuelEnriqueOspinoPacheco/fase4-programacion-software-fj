@@ -27,14 +27,14 @@ def cadena_de_causas(error):
 def ejecutar_operacion(numero, descripcion, funcion):
     """
     Ejecuta una operación sin que un error detenga el programa.
-    Usa try/except/else/finally. Devuelve True si fue exitosa.
+    Usa try/except/else/finally. Devuelve la categoría del resultado.
     """
     print(f"\n[{numero:02d}] {descripcion}")
     logger.info("INICIO operación %02d: %s", numero, descripcion)
-    exito = False
     try:
         resultado = funcion()
     except SoftwareFJError as error:                # Error controlado del sistema
+        categoria = "controlado"
         # Son los errores que nosotros mismos definimos y esperábamos
         causa = cadena_de_causas(error)
         print(f"     ✗ Error controlado: {error}")
@@ -43,19 +43,20 @@ def ejecutar_operacion(numero, descripcion, funcion):
         logger.error("Operación %02d falló: %s | causa: %s", numero, error,
                      causa or "N/A")
     except Exception as error:                      # Error inesperado
+        categoria = "inesperado"
         # Cualquier otra cosa que no previmos; se registra como crítico con traza
         print(f"     ✗ Error inesperado ({type(error).__name__}): {error}")
         logger.critical("Operación %02d error inesperado: %s: %s", numero,
                         type(error).__name__, error, exc_info=True)
     else:
         # Solo llega aquí si no hubo ninguna excepción
+        categoria = "exitosa"
         print(f"     ✓ OK: {resultado}")
         logger.info("Operación %02d exitosa: %s", numero, resultado)
-        exito = True
     finally:
         # Esto se ejecuta siempre, haya salido bien o mal
         logger.info("FIN operación %02d", numero)
-    return exito
+    return categoria
 
 
 def confirmar_y_procesar(gestor, id_reserva, descuento=None):
@@ -128,14 +129,24 @@ def main():
         ("Fallo inesperado (división por cero)", lambda: 1 / 0),
     ]
 
-    # Ejecutamos todas y contamos las exitosas (True cuenta como 1 al sumar)
-    exitosas = sum(ejecutar_operacion(n, d, f)
-                   for n, (d, f) in enumerate(operaciones, start=1))
+    # Ejecutamos todas y contamos cada categoría por separado
+    exitosas = 0
+    controladas = 0
+    inesperadas = 0
+    for n, (descripcion, funcion) in enumerate(operaciones, start=1):
+        categoria = ejecutar_operacion(n, descripcion, funcion)
+        if categoria == "exitosa":
+            exitosas += 1
+        elif categoria == "controlado":
+            controladas += 1
+        else:
+            inesperadas += 1
 
     # Resumen final: el programa siguió funcionando pese a los errores
     print("\n" + "=" * 60)
     print(f"Operaciones: {len(operaciones)} | exitosas: {exitosas} | "
-          f"con error controlado: {len(operaciones) - exitosas}")
+          f"con error controlado: {controladas} | "
+          f"con error inesperado: {inesperadas}")
     print("Estado final del sistema:")
     # Mostramos todo lo que quedó registrado: clientes, servicios y reservas
     for entidad in g.clientes + g.servicios + g.reservas:
