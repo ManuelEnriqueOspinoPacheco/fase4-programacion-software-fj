@@ -7,7 +7,7 @@ La idea es demostrar que el sistema no se cae cuando algo sale mal:
 cada operación se ejecuta de forma aislada y los errores se registran.
 """
 from excepciones_eva import SoftwareFJError
-from gestor_Manuel_Ospino import GestorSoftwareFJ
+from gestor_manuel import GestorSoftwareFJ
 from registro_eva import ARCHIVO_LOG, obtener_logger
 
 logger = obtener_logger()
